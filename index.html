@@ -1,0 +1,943 @@
+// web tes
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chymas</title>
+
+    <!-- Google Fonts - Distinctive & Romantic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Philosopher:wght@400;700&family=Quicksand:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Color Palette - Dark Romantic */
+        --dark-bg: #0a0a12;
+        --dark-overlay: rgba(10, 10, 18, 0.85);
+        --purple-soft: #b8a4d4;
+        --pink-dusk: #e8b4d9;
+        --blue-night: #7a9cc6;
+        --text-soft: #e8e8f0;
+        --accent-glow: rgba(184, 164, 212, 0.5);
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        background: var(--dark-bg);
+        color: var(--text-soft);
+        overflow: hidden;
+        height: 100vh;
+      }
+
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: linear-gradient(
+          135deg,
+          #0f0c1d 0%,
+          #1a1535 25%,
+          #1e1844 50%,
+          #261f52 75%,
+          #2d2461 100%
+        );
+      }
+
+      .background::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 40%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.6) 50%,
+          transparent 100%
+        );
+        z-index: 2;
+      }
+
+      .background::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(184, 164, 212, 0.15) 0%,
+          rgba(232, 180, 217, 0.1) 30%,
+          transparent 70%
+        );
+        animation: ambientPulse 8s ease-in-out infinite;
+      }
+
+      @keyframes ambientPulse {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: translate(-50%, -50%) scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: translate(-50%, -50%) scale(1.1);
+        }
+      }
+
+      .rain-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .rain {
+        position: absolute;
+        width: 1px;
+        height: 60px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(184, 164, 212, 0.3),
+          rgba(184, 164, 212, 0.1)
+        );
+        animation: rainfall linear infinite;
+      }
+
+      @keyframes rainfall {
+        0% {
+          transform: translateY(-100px);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      /* ========== OVERLAY CONTAINER ========== */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--dark-overlay);
+        z-index: 4;
+      }
+
+      /* ========== LANDING PAGE ========== */
+      .landing-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+        transition: opacity 1.5s ease;
+      }
+
+      .landing-page.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .landing-content {
+        text-align: center;
+        animation: fadeInUp 1.5s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .name-title {
+        font-family: "Philosopher", sans-serif;
+        font-size: clamp(4rem, 12vw, 8rem);
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--purple-soft),
+          var(--pink-dusk),
+          var(--blue-night)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 40px var(--accent-glow);
+        animation: titleGlow 3s ease-in-out infinite;
+        letter-spacing: 0.05em;
+      }
+
+      @keyframes titleGlow {
+        0%,
+        100% {
+          filter: brightness(1);
+        }
+        50% {
+          filter: brightness(1.3);
+        }
+      }
+
+      .subtitle {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        font-weight: 300;
+        color: var(--purple-soft);
+        margin-bottom: 3rem;
+        opacity: 0.9;
+        font-style: italic;
+        animation: fadeInUp 1.5s ease-out 0.5s both;
+      }
+
+      .enter-button {
+        font-family: "Quicksand", sans-serif;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        background: transparent;
+        color: var(--pink-dusk);
+        border: 2px solid var(--pink-dusk);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-weight: 500;
+        animation: fadeInUp 1.5s ease-out 1s both;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .enter-button::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        background: var(--pink-dusk);
+        border-radius: 50%;
+        transition: width 0.6s ease, height 0.6s ease;
+        z-index: -1;
+      }
+
+      .enter-button:hover {
+        color: var(--dark-bg);
+        box-shadow: 0 0 30px var(--accent-glow);
+        transform: translateY(-3px);
+      }
+
+      .enter-button:hover::before {
+        width: 300px;
+        height: 300px;
+      }
+
+      .main-page {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        display: none;
+        opacity: 0;
+        transition: opacity 1.5s ease;
+      }
+
+      .main-page.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .lyrics-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+      }
+
+      .lyric-line {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.8rem, 5vw, 3.5rem);
+        font-weight: 300;
+        color: var(--pink-dusk);
+        margin: 0;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 1.2s ease;
+        line-height: 1.8;
+        text-shadow: 0 0 25px rgba(232, 180, 217, 0.5);
+        position: absolute;
+        width: 90%;
+        max-width: 900px;
+      }
+
+      .lyric-line.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .lyric-line.hide {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      .music-controls {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 100;
+        display: none;
+      }
+
+      .music-controls.active {
+        display: block;
+        animation: fadeIn 1s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .volume-control {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 0.8rem 1.2rem;
+        border-radius: 50px;
+        border: 1px solid rgba(184, 164, 212, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .volume-icon {
+        color: var(--purple-soft);
+        font-size: 1.2rem;
+      }
+
+      .volume-slider {
+        width: 80px;
+        height: 4px;
+        -webkit-appearance: none;
+        appearance: none;
+        background: rgba(184, 164, 212, 0.3);
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        background: var(--pink-dusk);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px var(--accent-glow);
+      }
+
+      .volume-slider::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        background: var(--pink-dusk);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px var(--accent-glow);
+        border: none;
+      }
+
+      @media (max-width: 768px) {
+        .name-title {
+          font-size: 4rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+          padding: 0 1rem;
+        }
+
+        .enter-button {
+          padding: 0.8rem 2rem;
+          font-size: 1rem;
+        }
+
+        .lyric-line {
+          font-size: 2rem;
+          width: 95%;
+          padding: 0 1rem;
+        }
+
+        .music-controls {
+          bottom: 1rem;
+          right: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .name-title {
+          font-size: 3rem;
+        }
+
+        .lyric-line {
+          font-size: 1.5rem;
+          width: 95%;
+          padding: 0 1.5rem;
+          line-height: 1.6;
+        }
+
+        .volume-control {
+          padding: 0.6rem 1rem;
+        }
+
+        .volume-slider {
+          width: 60px;
+        }
+      }
+
+      .feedback-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      .feedback-modal.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .feedback-content {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 21, 53, 0.95),
+          rgba(45, 36, 97, 0.95)
+        );
+        border: 2px solid var(--purple-soft);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 0 50px var(--accent-glow);
+        animation: modalSlideIn 0.6s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .feedback-question {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        color: var(--pink-dusk);
+        margin-bottom: 2rem;
+        font-weight: 400;
+      }
+
+      .feedback-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .feedback-btn {
+        font-family: "Quicksand", sans-serif;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        background: transparent;
+        border: 2px solid var(--pink-dusk);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--pink-dusk);
+        font-weight: 500;
+        min-width: 120px;
+      }
+
+      .feedback-btn:hover {
+        background: var(--pink-dusk);
+        color: var(--dark-bg);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px var(--accent-glow);
+      }
+
+      .feedback-btn.no-btn {
+        border-color: var(--blue-night);
+        color: var(--blue-night);
+      }
+
+      .feedback-btn.no-btn:hover {
+        background: var(--blue-night);
+        color: var(--dark-bg);
+      }
+
+      .feedback-form-container {
+        display: none;
+        animation: fadeInUp 0.5s ease-out;
+      }
+
+      .feedback-form-container.active {
+        display: block;
+      }
+
+      .form-title {
+        font-family: "Philosopher", sans-serif;
+        font-size: 1.8rem;
+        color: var(--purple-soft);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+
+      .form-label {
+        font-family: "Quicksand", sans-serif;
+        color: var(--text-soft);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-weight: 500;
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(184, 164, 212, 0.3);
+        border-radius: 10px;
+        color: var(--text-soft);
+        font-family: "Quicksand", sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--pink-dusk);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 15px rgba(232, 180, 217, 0.2);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        background: linear-gradient(
+          135deg,
+          var(--purple-soft),
+          var(--pink-dusk)
+        );
+        border: none;
+        border-radius: 50px;
+        color: var(--dark-bg);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Quicksand", sans-serif;
+        margin-top: 1rem;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px var(--accent-glow);
+      }
+
+      .thank-you-message {
+        display: none;
+        animation: fadeInUp 0.5s ease-out;
+      }
+
+      .thank-you-message.active {
+        display: block;
+      }
+
+      .thank-you-title {
+        font-family: "Philosopher", sans-serif;
+        font-size: 2.5rem;
+        color: var(--pink-dusk);
+        margin-bottom: 1rem;
+      }
+
+      .thank-you-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.2rem;
+        color: var(--purple-soft);
+        line-height: 1.6;
+      }
+
+      /* Responsive untuk modal */
+      @media (max-width: 480px) {
+        .feedback-content {
+          padding: 2rem 1.5rem;
+        }
+
+        .feedback-question {
+          font-size: 1.3rem;
+        }
+
+        .feedback-btn {
+          padding: 0.7rem 1.5rem;
+          font-size: 0.9rem;
+        }
+
+        .form-title {
+          font-size: 1.5rem;
+        }
+
+        .thank-you-title {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background Kota Malam -->
+    <div class="background"></div>
+
+    <!-- Animasi Hujan -->
+    <div class="rain-container" id="rainContainer"></div>
+
+    <!-- Overlay Gelap -->
+    <div class="overlay"></div>
+
+    <!-- Landing Page -->
+    <div class="landing-page" id="landingPage">
+      <div class="landing-content">
+        <h1 class="name-title">Chymas</h1>
+        <p class="subtitle">Ada lagu yang selalu mengingatkanku padamu…</p>
+        <button class="enter-button" id="enterButton">Masuk</button>
+      </div>
+    </div>
+
+    <div class="main-page" id="mainPage">
+      <div class="lyrics-container" id="lyricsContainer"></div>
+    </div>
+
+    <div class="music-controls" id="musicControls">
+      <div class="volume-control">
+        <span class="volume-icon">🎵</span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="30"
+          class="volume-slider"
+          id="volumeSlider"
+        />
+      </div>
+    </div>
+
+    <div class="feedback-modal" id="feedbackModal">
+      <div class="feedback-content">
+        <div id="initialQuestion">
+          <h2 class="feedback-question">
+            Apakah kamu terkesan dengan website ini?
+          </h2>
+          <div class="feedback-buttons">
+            <button class="feedback-btn" id="yesBtn">Iya ✨</button>
+            <button class="feedback-btn no-btn" id="noBtn">Tidak</button>
+          </div>
+        </div>
+
+        <div class="feedback-form-container" id="feedbackForm">
+          <h3 class="form-title">Kritik & Saran 💌</h3>
+          <form
+            id="contactForm"
+            action="https://formsubmit.co/putuadit121@gmail.com"
+            method="POST"
+          >
+            <input
+              type="hidden"
+              name="_subject"
+              value="Feedback Website Chymas"
+            />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="text" name="_honey" style="display: none" />
+
+            <div class="form-group">
+              <label class="form-label" for="name">Nama (Opsional)</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="Nama kamu..."
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="message">Kritik & Saran *</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-textarea"
+                placeholder="Tuliskan kritik atau saran kamu di sini..."
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Kirim 💕</button>
+          </form>
+        </div>
+
+        <div class="thank-you-message" id="thankYouMessage">
+          <h2 class="thank-you-title">Terima Kasih! 💜</h2>
+          <p class="thank-you-text">Feedbackmu sangat berarti untukku ✨</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio Player -->
+    <!-- PENTING: Ganti src dengan URL lagu yang diinginkan -->
+    <!-- Untuk demo, menggunakan placeholder. User harus mengganti dengan link lagu asli -->
+    <audio id="backgroundMusic" loop>
+      <source src="YOUR_MUSIC_FILE.mp3" type="audio/mpeg" />
+      <!-- Ganti YOUR_MUSIC_FILE.mp3 dengan link lagu "Kota Ini Tak Lagi Sama Tanpamu" -->
+      <!-- Contoh: src="https://example.com/path/to/song.mp3" -->
+    </audio>
+
+    <script>
+      function createRain() {
+        const rainContainer = document.getElementById("rainContainer");
+        const rainCount = 100; // Jumlah tetesan hujan
+
+        for (let i = 0; i < rainCount; i++) {
+          const rain = document.createElement("div");
+          rain.classList.add("rain");
+
+          rain.style.left = Math.random() * 100 + "%";
+          rain.style.animationDuration = Math.random() * 1 + 0.5 + "s";
+          rain.style.animationDelay = Math.random() * 2 + "s";
+          rain.style.opacity = Math.random() * 0.3 + 0.2;
+
+          rainContainer.appendChild(rain);
+        }
+      }
+
+      createRain();
+
+      const enterButton = document.getElementById("enterButton");
+      const landingPage = document.getElementById("landingPage");
+      const mainPage = document.getElementById("mainPage");
+      const backgroundMusic = document.getElementById("backgroundMusic");
+      const musicControls = document.getElementById("musicControls");
+      const volumeSlider = document.getElementById("volumeSlider");
+
+      backgroundMusic.volume = 0.3;
+
+      enterButton.addEventListener("click", function () {
+        landingPage.classList.add("fade-out");
+
+        setTimeout(() => {
+          landingPage.style.display = "none";
+          mainPage.classList.add("active");
+          musicControls.classList.add("active");
+
+          // Play music
+          backgroundMusic.play().catch((error) => {
+            console.log("Autoplay prevented:", error);
+          });
+
+          showLyrics();
+        }, 1500);
+      });
+
+      // Volume control
+      volumeSlider.addEventListener("input", function () {
+        backgroundMusic.volume = this.value / 100;
+      });
+
+      // ========== LYRICS DISPLAY ==========
+      const lyrics = [
+        { text: "Jatuh cinta memang manis", duration: 4200 },
+        { text: "Tak mau waktu ini habis", duration: 4500 },
+        { text: "Penuhilah hati ini", duration: 4500 },
+        { text: "Tak lagi sendiri", duration: 6000 },
+        { text: "Oh, dengannya, dengan dia", duration: 5000 },
+        { text: "Langkahku sempurna", duration: 6200 },
+        { text: "Jatuh cinta memang manis", duration: 4200 },
+        { text: "Apalagi ada kamu di sini", duration: 4200 },
+        { text: "Genggam tanganku, sayang", duration: 6500 },
+        { text: "Kota ini tak sama tanpamu", duration: 4200 },
+        {
+          text: "Masih rasa ingin lagi habiskan waktu di sini",
+          duration: 6500,
+        },
+        { text: "Mungkin tiga atau empat hari lagi", duration: 5000 },
+      ];
+
+      let currentLyricIndex = 0;
+      let lyricTimeout;
+
+      function showLyrics() {
+        const container = document.getElementById("lyricsContainer");
+
+        function displayNextLyric() {
+          const previousLyric = container.querySelector(".lyric-line");
+          if (previousLyric) {
+            previousLyric.classList.remove("show");
+            previousLyric.classList.add("hide");
+
+            setTimeout(() => {
+              previousLyric.remove();
+            }, 1200);
+          }
+
+          if (currentLyricIndex < lyrics.length) {
+            const currentLyric = lyrics[currentLyricIndex];
+            const lyricElement = document.createElement("div");
+            lyricElement.classList.add("lyric-line");
+            lyricElement.textContent = currentLyric.text;
+            container.appendChild(lyricElement);
+
+            setTimeout(() => {
+              lyricElement.classList.add("show");
+            }, 100);
+
+            currentLyricIndex++;
+
+            if (currentLyricIndex < lyrics.length) {
+              lyricTimeout = setTimeout(
+                displayNextLyric,
+                currentLyric.duration
+              );
+            } else {
+              lyricTimeout = setTimeout(() => {
+                currentLyricIndex = 0;
+                displayNextLyric();
+              }, 5000);
+            }
+          }
+        }
+
+        displayNextLyric();
+      }
+
+      document.addEventListener("mousemove", (e) => {
+        const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+        const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+
+        document.querySelector(
+          ".background"
+        ).style.transform = `translate(${moveX}px, ${moveY}px)`;
+      });
+
+      const feedbackModal = document.getElementById("feedbackModal");
+      const initialQuestion = document.getElementById("initialQuestion");
+      const feedbackFormContainer = document.getElementById("feedbackForm");
+      const thankYouMessage = document.getElementById("thankYouMessage");
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+      const contactForm = document.getElementById("contactForm");
+
+      backgroundMusic.addEventListener("ended", function () {
+        feedbackModal.classList.add("active");
+      });
+
+      yesBtn.addEventListener("click", function () {
+        initialQuestion.style.display = "none";
+        feedbackFormContainer.classList.add("active");
+      });
+
+      noBtn.addEventListener("click", function () {
+        initialQuestion.style.display = "none";
+        thankYouMessage.classList.add("active");
+
+        setTimeout(() => {
+          feedbackModal.classList.remove("active");
+        }, 3000);
+      });
+
+      contactForm.addEventListener("submit", function (e) {
+        setTimeout(() => {
+          feedbackFormContainer.classList.remove("active");
+          thankYouMessage.classList.add("active");
+
+          setTimeout(() => {
+            feedbackModal.classList.remove("active");
+          }, 3000);
+        }, 500);
+      });
+    </script>
+  </body>
+</html>
